@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar {{ car.brand }} {{ car.model }} — Intraweb{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="bg-white border border-rose-200 rounded-2xl shadow-sm overflow-hidden text-center fade-up">
+        
+        <div class="bg-rose-50 p-6 flex justify-center">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-rose-500 shadow-sm shadow-rose-200">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-2">¿Estás seguro?</h2>
+            <p class="text-slate-600">Al eliminar el vehículo <strong class="text-slate-800">{{ car.brand }} {{ car.model }} ({{ car.year }})</strong>, lo borrarás del inventario permanentemente.</p>
+            <p class="text-xs text-rose-500 mt-2 font-medium">Esta acción no se puede deshacer.</p>
+
+            <form method="POST" class="mt-8 flex flex-col sm:flex-row gap-3">
+                {% csrf_token %}
+                <a href="{% url 'cars:intraweb_dashboard' %}" class="flex-1 px-6 py-3 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition">
+                    Cancelar
+                </a>
+                <button type="submit" class="flex-1 px-6 py-3 bg-rose-600 text-white font-bold rounded-xl shadow-md shadow-rose-200 hover:bg-rose-500 transition">
+                    Sí, eliminar vehículo
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

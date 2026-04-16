@@ -1,5 +1,8 @@
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
 from .models import Car
+from .forms import CarForm
 
 
 VENTAJAS = [
@@ -97,3 +100,71 @@ class VendeConNosotrosView(TemplateView):
             ('🤝', 'Asesoramiento personalizado', 'Un asesor dedicado te acompañará durante todo el proceso y resolverá cualquier duda.'),
         ]
         return context
+
+
+# =========================================================
+# INTRAWEB VIEWS (Private Dashboard)
+# =========================================================
+
+class StaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
+    """Mixin para restringir el acceso solo a usuarios con is_staff=True."""
+    def test_func(self):
+        return self.request.user.is_staff
+
+
+from django.db.models import Q
+
+class IntrawebDashboardView(StaffRequiredMixin, ListView):
+    """Listado del panel de control privado."""
+    model = Car
+    template_name = 'cars/intraweb_dashboard.html'
+    context_object_name = 'cars'
+    ordering = ['-year', 'brand']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Búsqueda por texto libre
+        q = self.request.GET.get('q', '').strip()
+        if q:
+            queryset = queryset.filter(
+                Q(brand__icontains=q) | 
+                Q(model__icontains=q)
+            )
+            
+        # Filtro por estado
+        status = self.request.GET.get('status', '')
+        if status:
+            queryset = queryset.filter(status=status)
+            
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Pasar los valores actuales a la plantilla para mantener el estado del formulario
+        context['current_q'] = self.request.GET.get('q', '')
+        context['current_status'] = self.request.GET.get('status', '')
+        return context
+
+
+class CarCreateView(StaffRequiredMixin, CreateView):
+    """Vista para crear un nuevo coche."""
+    model = Car
+    form_class = CarForm
+    template_name = 'cars/car_form.html'
+    success_url = reverse_lazy('cars:intraweb_dashboard')
+
+
+class CarUpdateView(StaffRequiredMixin, UpdateView):
+    """Vista para editar coches existentes."""
+    model = Car
+    form_class = CarForm
+    template_name = 'cars/car_form.html'
+    success_url = reverse_lazy('cars:intraweb_dashboard')
+
+
+class CarDeleteView(StaffRequiredMixin, DeleteView):
+    """Vista para eliminar coches del stock."""
+    model = Car
+    template_name = 'cars/car_confirm_delete.html'
+    success_url = reverse_lazy('cars:intraweb_dashboard')

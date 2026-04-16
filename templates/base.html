@@ -163,10 +163,21 @@
 
         <div class="border-t border-brand-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
             <p>&copy; {% now "Y" %} AutoMarket. Todos los derechos reservados.</p>
-            <div class="flex gap-4">
+            <div class="flex gap-4 items-center">
                 <a href="#" class="hover:text-slate-300 transition-colors">Aviso legal</a>
                 <a href="#" class="hover:text-slate-300 transition-colors">Privacidad</a>
-                <a href="#" class="hover:text-slate-300 transition-colors">Cookies</a>
+                
+                <span class="text-brand-800">|</span>
+                
+                {% if user.is_authenticated %}
+                    <a href="{% url 'cars:intraweb_dashboard' %}" class="text-brand-300 hover:text-white font-semibold transition-colors">Panel Intraweb</a>
+                    <form method="post" action="{% url 'cars:logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="hover:text-slate-300 transition-colors">Cerrar sesión</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'cars:login' %}" class="hover:text-slate-300 transition-colors">Acceso Empleados</a>
+                {% endif %}
             </div>
         </div>
     </div>

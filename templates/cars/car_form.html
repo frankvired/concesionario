@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {% if form.instance.pk %}Editar {{ form.instance.brand }}{% else %}Añadir Vehículo{% endif %} — AutoMarket Intraweb
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-6 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-extrabold text-slate-900">
+                {% if form.instance.pk %}Editar Vehículo{% else %}Añadir Vehículo{% endif %}
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">Completa o actualiza los datos del coche.</p>
+        </div>
+        <a href="{% url 'cars:intraweb_dashboard' %}" class="text-sm text-slate-500 hover:text-brand-600 transition font-medium">
+            &larr; Volver al panel
+        </a>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8">
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="bg-rose-50 border border-rose-200 text-rose-600 text-sm px-4 py-3 rounded-xl mb-6">
+                    Corrige los errores mostrados abajo.
+                </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Información Básica -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">Información Básica</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Marca *</label>
+                        {{ form.brand }}
+                        {{ form.brand.errors }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Modelo *</label>
+                        {{ form.model }}
+                        {{ form.model.errors }}
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Año *</label>
+                            {{ form.year }}
+                            {{ form.year.errors }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Combustible *</label>
+                            {{ form.fuel }}
+                            {{ form.fuel.errors }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Kilómetros *</label>
+                        {{ form.km }}
+                        {{ form.km.errors }}
+                    </div>
+                </div>
+
+                <!-- Precios y Estado -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-slate-800 border-b border-slate-100 pb-2">Precios y Estado</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Estado de venta *</label>
+                        {{ form.status }}
+                        {{ form.status.errors }}
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-6">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Precio Compra (€) *</label>
+                            {{ form.purchase_price }}
+                            {{ form.purchase_price.errors }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Precio Venta (€) *</label>
+                            {{ form.selling_price }}
+                            {{ form.selling_price.errors }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wide mb-1">Precio Mercado Ref. (€)</label>
+                        {{ form.market_price_reference }}
+                        <p class="text-xs text-slate-400 mt-1">Comparativa visual para el cliente (opcional)</p>
+                        {{ form.market_price_reference.errors }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-100 mt-8 flex justify-end gap-3">
+                <a href="{% url 'cars:intraweb_dashboard' %}" class="px-6 py-3 border border-slate-200 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition">
+                    Cancelar
+                </a>
+                <button type="submit" class="px-6 py-3 bg-brand-600 text-white font-bold rounded-xl shadow-md shadow-brand-200 hover:bg-brand-500 transition">
+                    {% if form.instance.pk %}Guardar cambios{% else %}Añadir vehículo{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
