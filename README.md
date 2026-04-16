@@ -1,0 +1,1 @@
+Instalar dependencias, te haces un venv y ejecutas pip install -r requirements.txt

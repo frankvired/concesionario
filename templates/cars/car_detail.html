@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ car.brand }} {{ car.model }} {{ car.year }} — AutoMarket{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div class="bg-white border-b border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <nav class="flex items-center gap-2 text-sm text-slate-500">
+            <a href="{% url 'cars:car_list' %}" class="hover:text-brand-600 transition-colors flex items-center gap-1 font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 12l6-6M3 12l6 6"/>
+                </svg>
+                Volver al catálogo
+            </a>
+            <span class="text-slate-300">/</span>
+            <span class="text-slate-400">{{ car.brand }}</span>
+            <span class="text-slate-300">/</span>
+            <span class="text-slate-700 font-semibold">{{ car.model }}</span>
+        </nav>
+    </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+
+        <!-- ===== COLUMNA IZQUIERDA: Galería + Specs ===== -->
+        <div class="lg:col-span-7 fade-up">
+
+            <!-- Imagen principal -->
+            <div class="relative bg-gradient-to-br from-slate-200 to-slate-300 rounded-2xl overflow-hidden aspect-[16/10] flex items-center justify-center group mb-4 shadow-sm border border-slate-100">
+                <svg class="w-40 h-40 text-slate-400 group-hover:scale-105 transition-transform duration-500" viewBox="0 0 64 64" fill="none">
+                    <rect x="4" y="24" width="56" height="22" rx="4" fill="currentColor" opacity=".1"/>
+                    <path d="M8 30 L16 18 H48 L56 30" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/>
+                    <rect x="4" y="30" width="56" height="16" rx="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <circle cx="16" cy="46" r="5" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="48" cy="46" r="5" stroke="currentColor" stroke-width="2"/>
+                    <rect x="20" y="20" width="24" height="10" rx="2" fill="currentColor" opacity=".15"/>
+                    <line x1="22" y1="34" x2="42" y2="34" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p class="absolute bottom-4 text-slate-400 text-sm font-medium">📷 Fotos disponibles bajo petición</p>
+
+                <!-- Badge estado -->
+                <div class="absolute top-4 left-4">
+                    {% if car.status == 'DISPONIBLE' %}
+                    <span class="flex items-center gap-2 bg-emerald-500 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg">
+                        <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> Disponible
+                    </span>
+                    {% elif car.status == 'RESERVADO' %}
+                    <span class="flex items-center gap-2 bg-amber-500 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg">
+                        <span class="w-2 h-2 rounded-full bg-white"></span> Reservado
+                    </span>
+                    {% else %}
+                    <span class="flex items-center gap-2 bg-slate-600 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg">
+                        Vendido
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Thumbnails placeholder -->
+            <div class="grid grid-cols-4 gap-2 mb-8">
+                {% for i in "1234" %}
+                <div class="aspect-[4/3] bg-slate-100 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center">
+                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 18h16.5M3 12V6a1 1 0 011-1h16a1 1 0 011 1v12"/>
+                    </svg>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Ficha técnica tipo tabla -->
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50">
+                    <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        Ficha técnica
+                    </h2>
+                </div>
+                <div class="divide-y divide-slate-50">
+                    {% for label, value in specs %}
+                    <div class="flex items-center justify-between px-6 py-3.5 hover:bg-slate-50 transition-colors">
+                        <span class="text-sm text-slate-500 font-medium">{{ label }}</span>
+                        <span class="text-sm font-bold text-slate-800">{{ value }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== COLUMNA DERECHA: Precio + CTA ===== -->
+        <div class="lg:col-span-5 fade-up" style="animation-delay:.15s">
+
+            <!-- Sticky wrapper en desktop -->
+            <div class="lg:sticky lg:top-24 space-y-4">
+
+                <!-- Título -->
+                <div>
+                    <p class="text-xs text-slate-400 uppercase tracking-widest font-semibold">{{ car.brand }}</p>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight mt-1">{{ car.model }}</h1>
+                    <div class="flex flex-wrap gap-2 mt-3">
+                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1 rounded-full">📅 {{ car.year }}</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1 rounded-full">⛽ {{ car.get_fuel_display }}</span>
+                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-3 py-1 rounded-full">📍 {{ car.km|floatformat:0 }} km</span>
+                    </div>
+                </div>
+
+                <!-- Caja de precio -->
+                <div class="bg-brand-50 border border-brand-100 rounded-2xl p-5">
+                    <p class="text-xs text-brand-600 font-semibold uppercase tracking-wider mb-1">Precio de venta</p>
+                    <p class="text-4xl font-extrabold text-brand-700 leading-none">
+                        {{ car.selling_price|floatformat:0 }}<span class="text-2xl text-brand-500"> €</span>
+                    </p>
+                    {% if car.market_price_reference %}
+                    <div class="flex items-center gap-2 mt-3 pt-3 border-t border-brand-100">
+                        <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <p class="text-sm text-slate-500">
+                            Precio de mercado:
+                            <span class="font-semibold text-slate-600">{{ car.market_price_reference|floatformat:0 }} €</span>
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Botones CTA -->
+                <div class="space-y-3">
+                    <a href="tel:+34900000000" class="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-500 text-white font-bold py-3.5 px-6 rounded-xl transition-colors shadow-lg shadow-brand-200 text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 1.18 2 2 0 014 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                        </svg>
+                        Llamar ahora · Gratis
+                    </a>
+                    <a href="mailto:info@automarket.es?subject=Info {{ car.brand }} {{ car.model }} {{ car.year }}" class="w-full flex items-center justify-center gap-2 bg-white border-2 border-brand-200 hover:border-brand-400 text-brand-700 font-bold py-3.5 px-6 rounded-xl transition-colors text-base">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Solicitar información
+                    </a>
+                </div>
+
+                <!-- Garantías -->
+                <div class="bg-white border border-slate-100 rounded-2xl p-4 space-y-3 shadow-sm">
+                    {% for icon, texto in garantias %}
+                    <div class="flex items-center gap-3 text-sm text-slate-600">
+                        <span class="text-lg leading-none">{{ icon }}</span>
+                        <span>{{ texto }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Última actualización de mercado -->
+                {% if car.last_market_update %}
+                <p class="text-xs text-slate-400 text-center flex items-center justify-center gap-1">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Precio revisado el {{ car.last_market_update|date:"d/m/Y" }}
+                </p>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
