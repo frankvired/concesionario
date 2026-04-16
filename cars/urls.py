@@ -6,4 +6,6 @@ app_name = 'cars'
 urlpatterns = [
     path('', views.CarListView.as_view(), name='car_list'),
     path('coche/<int:pk>/', views.CarDetailView.as_view(), name='car_detail'),
+    path('financiacion/', views.FinanciacionView.as_view(), name='financiacion'),
+    path('vende-con-nosotros/', views.VendeConNosotrosView.as_view(), name='vende'),
 ]
